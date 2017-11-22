@@ -69,67 +69,70 @@ def main():
     mydict_attitude['negative'] = data.loc[(data['attitude'] == 'negative')].index.values.tolist()
 
 
-    for key in mydict_attitude:
-        print(mydict_attitude[key])
 
     star = []
     fullindex = data.index.values.tolist()
 
-    temparr = []
-    if data.at[0, 'size'] != data.at[1, 'size']:
-        temp = {'size': data.at[1, 'size']}
-        temparr.append(temp)
-    if data.at[0, 'body-color'] != data.at[1, 'body-color']:
-        temp = {'body-color': data.at[1, 'body-color']}
-        temparr.append(temp)
-    star.append(temparr)
 
-    finalstr = strgenerator(star)
     # print(data.loc[eval(finalstr)].index.values.tolist())
 
-    seed = (mydict_attitude['positive'][0])
-    seedarray = [0, 1]
-    star = []
-    for x in fullindex:
-        if x not in mydict_attitude['positive']:
-            if x in seedarray:
-                temparr = []
-                for attr in list_of_attributes:
-                    if data.at[seed, attr] != data.at[x, attr]:
-                        temp = [{attr: data.at[x, attr]}]
-                        temparr.append(temp)
-                tempstar = []
-                tempstar = setconjunction(star, temparr)
-                star = tempstar
-                finalstr = strgenerator(star)
-            else:
-                print('-')
-            seedarray = data.loc[eval(finalstr)].index.values.tolist()
+    # seed = (mydict_attitude['positive'][0])
+    # seedarray = [0, 1]
+    # star = []
+    # for x in fullindex:
+    #     if x not in mydict_attitude['positive']:
+    #         if x in seedarray:
+    #             temparr = []
+    #             for attr in list_of_attributes:
+    #                 if data.at[seed, attr] != data.at[x, attr]:
+    #                     temp = [{attr: data.at[x, attr]}]
+    #                     temparr.append(temp)
+    #             tempstar = []
+    #             tempstar = setconjunction(star, temparr)
+    #             star = tempstar
+    #             finalstr = strgenerator(star)
+    #             seedarray = data.loc[eval(finalstr)].index.values.tolist()
+    #         else:
+    #             print('-')
+
+    # print(seedarray)
+    # print(star)
+
+    # seed = (mydict_attitude['negative'][0])
+    seedarray = [1]
+    finalstar = []
+    for seed in mydict_attitude['negative']:
+        star = []
+        if (seed not in seedarray) or seed == mydict_attitude['negative'][0]:
+            seedarray.append(0)
+            print("seed", seed)
+            print("seedarray", seedarray)
+            if set(seedarray) == set(mydict_attitude['negative']):
+                print("breaking")
+                break
+            for x in fullindex:
+                if x not in mydict_attitude['negative'] or x in seedarray:
+                    temparr = []
+                    for attr in list_of_attributes:
+                        print("x - attribute", x, attr)
+                        if data.at[seed, attr] != data.at[x, attr]:
+                            temp = [{attr: data.at[x, attr]}]
+                            temparr.append(temp)
+                            print("temparr", temparr)
+                    tempstar = []
+                    tempstar = setconjunction(star.copy(), temparr.copy())
+                    for array in tempstar:
+                        finalstar.append(array)
+                    # star.append(tempstar)
+                    finalstr = strgenerator(finalstar)
+                    print("finalstr", finalstr)
+                    seedarray = data.loc[eval(finalstr)].index.values.tolist()
+                    break
 
     print(seedarray)
     print(star)
 
-    seed = (mydict_attitude['negative'][0])
-    seedarray = [0, 1]
-    star = []
-    for x in fullindex:
-        if x not in mydict_attitude['negative']:
-            if x in seedarray:
-                temparr = []
-                for attr in list_of_attributes:
-                    if data.at[seed, attr] != data.at[x, attr]:
-                        temp = [{attr: data.at[x, attr]}]
-                        temparr.append(temp)
-                tempstar = []
-                tempstar = setconjunction(star, temparr)
-                star = tempstar
-                finalstr = strgenerator(star)
-            else:
-                print('-')
-            seedarray = data.loc[eval(finalstr)].index.values.tolist()
-
-    print(seedarray)
-    print(star)
+    coveredlist = []
 
     # temparr = []
     # for row in mydict_attitude['negative']:
