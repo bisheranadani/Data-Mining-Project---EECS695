@@ -30,7 +30,9 @@ def main():
     # print(mydict_attitude, list_of_attributes)
     # print(firstnumseed(mydict_attitude, fullindex), mydict_attitude)
 
-    AQalgo(data, fullindex, mydict_attitude, list_of_attributes)
+    # AQalgo(data, fullindex, mydict_attitude, list_of_attributes)
+    exrulset = [{'size': 'small', 'ink-color': 'red', 'body-color': 'blue'}, {'size': 'small', 'body-color': 'blue'}]
+    startotextrule(exrulset, "negative")
 
 def strgenerator(star):
     finalstr = """"""
@@ -138,11 +140,18 @@ def AQalgo(data, fullindex, attitudeset, list_of_attributes):
     return final_star
 
 
-def startotextrule(star):
+def startotextrule(star, attitude):
+    stringarray = []
     for dict in star:
-        finalstr = ""
+        count1 = 0
+        tempstr = ""
         for key in dict:
-            tempstr = "("+key+","+" not "+"dict[key]"
+            if count1 > 0:
+                tempstr = tempstr + " & "
+            tempstr = tempstr + "(" + key + ","+" not "+ dict[key] + ")"
+            count1 += 1
+        tempstr = tempstr + " -> (attitude, " + attitude +")"
+        print(tempstr)
 
 
 
